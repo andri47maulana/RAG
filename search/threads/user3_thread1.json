@@ -1,0 +1,21 @@
+[
+  {
+    "q": "apa itu agri radar",
+    "a": "Teknologi Agriradar merupakan sistem berbasis radar menggunakan drone dan kamera multispectral yang digunakan untuk memantau kondisi kesehatan tanaman, kadar air tanah, prediksi kebutuhan hara dan prediksi jumlah pupuk secara spasial dan real time."
+  },
+  {
+    "q": "apa itu agri radar",
+    "rephrased": "Apa fungsi spesifik dari teknologi Agriradar dalam memantau kondisi kesehatan tanaman dan bagaimana cara kerjanya dalam memprediksi kadar air tanah, kebutuhan hara, dan jumlah pupuk secara spasial dan real time?",
+    "a": "Teknologi Agriradar digunakan untuk memantau kondisi kesehatan tanaman dan kadar air tanah. Cara kerjanya dalam memprediksi kebutuhan hara dan jumlah pupuk secara spasial dan real time melibatkan beberapa langkah. Pertama, pengambilan citra vegetasi menggunakan drone multispectral yang memindai kebun teh berdasarkan pantulan sinyal dari tajuk tanaman. Selanjutnya, dilakukan analisis status hara daun dan rekomendasi dosis pupuk berdasarkan status hara actual. Teknologi ini juga digunakan untuk memetakan kebutuhan hara tanaman dan menyusun rekomendasi pemupukan presisi."
+  },
+  {
+    "q": "apa itu agri radar",
+    "rephrased": "Bagaimana teknologi Agriradar bekerja dalam memantau kondisi kesehatan tanaman dan kadar air tanah, serta memprediksi kebutuhan hara dan jumlah pupuk secara spasial dan real time?",
+    "a": "Teknologi Agriradar bekerja dengan beberapa langkah dalam memprediksi kebutuhan hara. Pertama, pengambilan citra vegetasi menggunakan drone multispectral yang memindai kebun teh berdasarkan pantulan sinyal dari tajuk tanaman. Kemudian dilakukan analisis status hara daun dan rekomendasi dosis pupuk berdasarkan status hara actual. Teknologi ini juga digunakan untuk memantau kondisi kesehatan tanaman dan kadar air tanah."
+  },
+  {
+    "q": "apa itu agri radar",
+    "rephrased": "Bagaimana teknologi Agriradar bekerja dalam memprediksi kebutuhan hara dan memantau kondisi kesehatan tanaman serta kadar air tanah di kebun teh?",
+    "a": "Teknologi Agriradar bekerja dengan beberapa langkah dalam memprediksi kebutuhan hara dan memantau kondisi kesehatan tanaman serta kadar air tanah. Langkah-langkah tersebut meliputi pengambilan citra vegetasi menggunakan drone multispectral yang memindai kebun teh berdasarkan pantulan sinyal dari tajuk tanaman, analisis status hara daun dan rekomendasi dosis pupuk berdasarkan status hara actual. Selain itu, teknologi ini juga menentukan kesehatan tanaman dan kadar air tanah dengan menggunakan kamera multispektral dan radar menggunakan alat Agriradar."
+  }
+]

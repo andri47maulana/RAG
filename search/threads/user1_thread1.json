@@ -1,0 +1,31 @@
+[
+  {
+    "q": "apa itu aigri?",
+    "a": "AIGR1 (Artificial Intelligence for Agribusiness PTPN 1) adalah platform kecerdasan buatan yang dikembangkan PTPN 1 untuk mendukung digitalisasi agribisnis."
+  },
+  {
+    "q": "fiturnya?",
+    "rephrased": "Apa saja fitur spesifik yang disediakan oleh AIGR1 (Artificial Intelligence for Agribusiness PTPN 1) dalam mendukung digitalisasi agribisnis?",
+    "a": "Fitur spesifik yang disediakan oleh AIGR1 (Artificial Intelligence for Agribusiness PTPN 1) dalam mendukung digitalisasi agribisnis meliputi: Knowledge Management untuk mengakses dokumen penting perusahaan seperti SOP, instruksi kerja, laporan, dan data RKAP; Pengelolaan data asset Monika untuk monitoring kerja sama aset berbasis peta digital; Prediksi Cuaca di Kebun yang membantu perencanaan kerja lapangan berbasis prakiraan cuaca; AGRINAV Chatbot (Speech to Text &Text to Speech); WHATSAPP Chatbot; AIGRI GIS yang menampilkan lokasi Aset & Kerjasama beserta pin dan polygon; dan AIGRI Forcasting yang menampilkan prediksi."
+  },
+  {
+    "q": "buatkan fiturnya dalam bentuk list dengan nomor",
+    "rephrased": "Dapatkah Anda mendaftar fitur spesifik yang disediakan oleh AIGR1 (Artificial Intelligence for Agribusiness PTPN 1) dalam mendukung digitalisasi agribisnis dalam bentuk list dengan nomor, mulai dari Knowledge Management hingga AIGRI Forcasting?",
+    "a": "1. Knowledge Management: Fitur ini memungkinkan akses ke dokumen penting perusahaan seperti SOP, instruksi kerja, laporan, dan data RKAP.\n2. Pengelolaan data asset Monika: Fitur ini digunakan untuk monitoring kerja sama aset berbasis peta digital.\n3. Prediksi Cuaca di Kebun: Fitur ini membantu dalam perencanaan kerja lapangan berdasarkan prakiraan cuaca.\n4. AGRINAV Chatbot (Speech to Text & Text to Speech): Fitur ini memungkinkan interaksi melalui chatbot.\n5. WHATSAPP Chatbot: Fitur ini memungkinkan interaksi melalui WhatsApp chatbot.\n6. AIGRI GIS: Fitur ini menampilkan lokasi Aset & Kerjasama beserta pin dan polygon.\n7. AIGRI Forcasting: Fitur ini menampilkan prediksi."
+  },
+  {
+    "q": "jelaskan yang nomor 3",
+    "rephrased": "Bisakah Anda menjelaskan lebih detail tentang fitur Prediksi Cuaca di Kebun dan bagaimana fitur ini membantu dalam perencanaan kerja lapangan berdasarkan prakiraan cuaca?",
+    "a": "Fitur Prediksi Cuaca di Kebun adalah salah satu fitur utama dari aplikasi Evo. Fitur ini membantu dalam perencanaan kerja lapangan berdasarkan prakiraan cuaca. Meskipun detail lebih lanjut tentang bagaimana fitur ini bekerja tidak disediakan dalam konteks yang diberikan, kita dapat mengasumsikan bahwa fitur ini mungkin memberikan prakiraan cuaca yang akurat untuk area kebun tertentu, yang kemudian dapat digunakan untuk merencanakan kegiatan lapangan seperti penanaman, pemupukan, atau panen. Dengan demikian, fitur ini dapat meningkatkan efisiensi operasional di lingkungan PT."
+  },
+  {
+    "q": "apa itu ptpn1",
+    "rephrased": "Apa fungsi dari fitur Prediksi Cuaca di Kebun dalam aplikasi Evo dan bagaimana fitur ini dapat meningkatkan efisiensi operasional di PT?",
+    "a": "Fitur Prediksi Cuaca di Kebun dalam aplikasi Evo berfungsi untuk membantu perencanaan kerja lapangan berbasis prakiraan cuaca. Fitur ini dapat meningkatkan efisiensi operasional di PT dengan mempercepat akses informasi dan mendukung pengambilan keputusan."
+  },
+  {
+    "q": "berapa jumlah total fiturnya",
+    "rephrased": "Berapa jumlah total fitur yang ada dalam aplikasi Evo yang membantu meningkatkan efisiensi operasional di PT, termasuk fitur Prediksi Cuaca di Kebun?",
+    "a": "Tiga fitur utama."
+  }
+]

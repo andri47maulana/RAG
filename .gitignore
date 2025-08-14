@@ -137,3 +137,11 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Ignore semua node_modules di seluruh project
+node_modules/
+# Ignore node_modules dan .env di uploader
+uploader/node_modules/
+uploader/.env
+# Ignore node_modules in uploader
+uploader/node_modules/
