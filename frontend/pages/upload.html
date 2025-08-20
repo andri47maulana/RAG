@@ -1,0 +1,237 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Upload Dokumen - RAG Uploader</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .box { margin: auto; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div style="margin-bottom:20px">
+      <label for="kategori" style="font-weight:bold">Kategori:</label>
+      <select name="kategori" id="kategori" required style="margin-left:10px">
+        <option value="">-- Pilih Kategori --</option>
+        <option value="keuangan">Keuangan</option>
+        <option value="sdm">SDM</option>
+        <option value="operasional">Operasional</option>
+        <option value="teknologi">Teknologi</option>
+        <option value="hukum">Hukum</option>
+      </select>
+    </div>
+    <h2>Upload Source(PDF / TXT)</h2>
+    <form id="u" enctype="multipart/form-data" method="post" action="/upload">
+      <input type="file" name="file" accept=".pdf,.txt" required />
+      <br/><br/>
+      <button type="submit" style="background-color: aquamarine;">Upload & Index</button>
+    </form>
+    <div id="status"></div>
+    <div id="progressBox" style="margin:10px 0;display:none">
+      <div id="progressText" style="font-weight:bold"></div>
+      <div style="background:#eee;border-radius:5px;height:18px;width:100%;max-width:400px;overflow:hidden">
+        <div id="progressBar" style="background:#4caf50;height:18px;width:0%;transition:width 0.2s"></div>
+      </div>
+    </div>
+    <hr/>
+    <div style="display:flex; gap:30px; align-items:flex-start;">
+      <div style="max-width:500px;">
+        <h2>Knowledge AI</h2>
+        <div id="docList" style="min-height:500px; max-height:600px; overflow-y:auto; background:#f9f9f9; border-radius:8px; border:1px solid #eee; padding:12px;">Memuat...</div>
+      </div>
+      <div style="flex:1;">
+        <h2>RAG Search [<span id="labelKategori"></span>]</h2>
+        <form id="searchForm">
+          <input type="text" id="question" name="question" placeholder="Tulis pertanyaan..." style="width:80%" required />
+          <button type="submit">Cari</button>
+        </form>
+        <div id="searchResult"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+  // Ambil PYTHON_URL dan SECURITY_KEY dari .env yang di-inject ke window.env (harus di-inject server-side atau build tool)
+  // Untuk demo, fallback ke 'http://localhost:5001' jika tidak ada
+  const PYTHON_URL = (window.env && window.env.PYTHON_URL) || 'http://localhost:5001';
+  const SECURITY_KEY = (window.env && window.env.SECURITY_KEY) || '';
+    let evtSourceGlobal = null; // Tambahkan di luar event listener
+  // Simpan total embedding terakhir agar bisa fallback saat "done"
+  let lastEmbeddingTotal = null;
+  let lastEmbeddingCurrent = null;
+    // Upload dokumen
+    const f = document.getElementById('u');
+    f.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (evtSourceGlobal) {
+        evtSourceGlobal.close();
+        evtSourceGlobal = null;
+      }
+      // Generate unique progress_id
+      const progress_id = 'p_' + Math.random().toString(36).slice(2) + Date.now();
+      const fd = new FormData(f);
+      fd.append('kategori', document.getElementById('kategori').value);
+      fd.append('progress_id', progress_id);
+      document.getElementById('status').innerText = 'Uploading...';
+      document.getElementById('progressBox').style.display = 'block';
+      document.getElementById('progressText').innerText = '';
+      document.getElementById('progressBar').style.width = '0%';
+      // Mulai stream progress dengan progress_id
+      evtSourceGlobal = new EventSource(`${PYTHON_URL}/progress-stream?id=${progress_id}`);
+      evtSourceGlobal.onmessage = function(e) {
+        console.log('[SSE] Progress event:', e.data);
+        // Embedding progress detection
+        let embeddingMatch = e.data.match(/Embedding (\d+)[^\d]+(\d+)/i);
+        if (embeddingMatch) {
+          let current = parseInt(embeddingMatch[1]);
+          let total = parseInt(embeddingMatch[2]);
+          lastEmbeddingCurrent = current;
+          lastEmbeddingTotal = total;
+          let percent = Math.round((current / total) * 100);
+          document.getElementById('progressText').innerText = `Embedding ${current}/${total} (${percent}%)`;
+          document.getElementById('progressBar').style.width = percent + '%';
+          // Jika sudah selesai embedding terakhir, paksa 100%
+          if (current === total) {
+            document.getElementById('progressBar').style.width = '100%';
+            document.getElementById('progressText').innerText = `Embedding ${current}/${total} (100%)`;
+          }
+        } else if (e.data.toLowerCase().includes('indexing')) {
+          document.getElementById('progressText').innerText = 'Indexing...';
+          document.getElementById('progressBar').style.width = '90%';
+        } else {
+          document.getElementById('progressText').innerText = e.data;
+          const match = e.data.match(/(\d+)%/);
+          if (match) {
+            document.getElementById('progressBar').style.width = match[1] + '%';
+          } else {
+            // Fallback: update bar for known stages
+            if (e.data.toLowerCase().includes('upload started')) {
+              document.getElementById('progressBar').style.width = '10%';
+            } else if (e.data.toLowerCase().includes('text extracted')) {
+              document.getElementById('progressBar').style.width = '30%';
+            } else if (e.data.toLowerCase().includes('chunked')) {
+              document.getElementById('progressBar').style.width = '50%';
+            } else if (e.data.toLowerCase().includes('embedding')) {
+              document.getElementById('progressBar').style.width = '70%';
+            } else if (e.data.toLowerCase().includes('done')) {
+              document.getElementById('progressBar').style.width = '100%';
+            }
+          }
+        }
+        if (e.data.toLowerCase().includes('done')) {
+          // Paksa progress bar dan text ke 100% apapun status sebelumnya
+          document.getElementById('progressBar').style.width = '100%';
+          if (lastEmbeddingTotal) {
+            document.getElementById('progressText').innerText = `Embedding ${lastEmbeddingTotal}/${lastEmbeddingTotal} (100%)`;
+          } else {
+            document.getElementById('progressText').innerText = 'Embedding selesai (100%)';
+          }
+          setTimeout(() => evtSourceGlobal && evtSourceGlobal.close(), 1000);
+        }
+      };
+      evtSourceGlobal.onerror = function() {
+        evtSourceGlobal.close();
+      };
+      const res = await fetch(`${PYTHON_URL}/upload`, { method: 'POST', body: fd });
+      let j = null;
+      try {
+        j = await res.json();
+      } catch (e) {
+        document.getElementById('status').innerText = 'Gagal parsing respons backend.';
+        // Fallback paksa progress bar 100% jika gagal parsing
+        document.getElementById('progressBar').style.width = '100%';
+        if (evtSourceGlobal) evtSourceGlobal.close();
+        return;
+      }
+      if (!res.ok || !j.ok) {
+        document.getElementById('status').innerText = 'Error: ' + (j && j.error ? j.error : 'Upload gagal');
+        // Fallback paksa progress bar 100% jika upload error
+        document.getElementById('progressBar').style.width = '100%';
+        if (evtSourceGlobal) evtSourceGlobal.close();
+        return;
+      }
+      document.getElementById('status').innerText = j.message || '';
+      // Fallback: pastikan progress bar 100% setelah upload selesai
+      document.getElementById('progressBar').style.width = '100%';
+      setTimeout(() => {
+        if (evtSourceGlobal) evtSourceGlobal.close();
+        //document.getElementById('progressBox').style.display = 'none';
+        loadDocs();
+      }, 3000);
+    });
+
+    // Pencarian RAG
+    const sf = document.getElementById('searchForm');
+    sf.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const question = document.getElementById('question').value;
+      const kategori = document.getElementById('kategori').value;
+      // Tambahkan input untuk security key, bisa dari prompt atau input hidden/visible
+      let securityKey = '1245';
+     
+      document.getElementById('searchResult').innerText = 'Mencari...';
+      const res = await fetch(`${PYTHON_URL}/answer`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question, kategori, security_key: securityKey })
+      });
+      const j = await res.json();
+      if (j.ok) {
+        let html = '<b>Jawaban LLM:</b><br/><div style="background:#f6f6f6;padding:10px;border-radius:5px;margin-bottom:10px">' + (j.answer || '-') + '</div>';
+        html += '<b>Konteks hasil pencarian:</b><br/><ul>';
+        for (const r of j.results) {
+          html += `<li><pre>${r.text}</pre></li>`;
+        }
+        html += '</ul>';
+        document.getElementById('searchResult').innerHTML = html;
+      } else {
+        document.getElementById('searchResult').innerText = 'Error: ' + (j.error || 'Tidak ada hasil');
+      }
+    });
+    // Daftar dokumen dan hapus
+    async function loadDocs() {
+      const kategori = document.getElementById('kategori').value;
+      const res = await fetch(`${PYTHON_URL}/docs?kategori=` + encodeURIComponent(kategori));
+      const j = await res.json();
+      if (j.ok) {
+        let html = '<table style="width:100%;border-collapse:collapse">';
+        html += '<thead><tr style="background:#eee"><th style="text-align:left;padding:8px;border-bottom:1px solid #ddd">Nama File</th><th style="text-align:left;padding:8px;border-bottom:1px solid #ddd">Kategori</th><th style="padding:8px;border-bottom:1px solid #ddd">Aksi</th></tr></thead><tbody>';
+        for (const f of j.files) {
+          console.log(f);
+          const fileUrl = `${PYTHON_URL}/docs/${encodeURIComponent(f.kategori || kategori)}/${encodeURIComponent(f.nama || f)}`;
+          html += `<tr><td style="padding:8px;border-bottom:1px solid #eee"><a href="${fileUrl}" target="_blank">${f.nama || f}</a></td><td style="padding:8px;border-bottom:1px solid #eee">${f.kategori || kategori}</td><td style="padding:8px;border-bottom:1px solid #eee"><button onclick="deleteDoc('${f.nama || f}')">Hapus</button></td></tr>`;
+        }
+        html += '</tbody></table>';
+        document.getElementById('docList').innerHTML = html;
+      } else {
+        document.getElementById('docList').innerText = 'Gagal memuat dokumen';
+      }
+    }
+    async function deleteDoc(filename) {
+      if (!confirm('Hapus dokumen ' + filename + '?')) return;
+      const kategori = document.getElementById('kategori').value;
+      const res = await fetch(`${PYTHON_URL}/delete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename, kategori })
+      });
+      const j = await res.json();
+      if (j.ok) {
+        document.getElementById('status').innerText = 'Dokumen dihapus dan index diperbarui';
+        loadDocs();
+      } else {
+        document.getElementById('status').innerText = 'Gagal hapus: ' + (j.error || 'Unknown error');
+      }
+    }
+    // Endpoint untuk daftar dokumen
+    document.getElementById('kategori').addEventListener('change', () => {
+      loadDocs();
+      document.getElementById('status').innerText = '';
+      document.getElementById('searchResult').innerText = '';
+      document.getElementById('labelKategori').innerText = document.getElementById('kategori').value || "";
+
+    });
+    loadDocs();
+  </script>
+</body>
+</html>
