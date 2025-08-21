@@ -11,6 +11,22 @@ def extract_text(file_path):
         except Exception:
             return ''
     elif file_path.lower().endswith('.pdf'):
+        # Hybrid: Try PyMuPDF (fitz) first, fallback to pdfplumber if needed
+        try:
+            import fitz  # PyMuPDF
+            text = ''
+            doc = fitz.open(file_path)
+            for page in doc:
+                page_text = page.get_text()
+                if page_text:
+                    text += page_text + '\n'
+            if text.strip():
+                return text
+        except Exception as e:
+            import traceback
+            print(f"[extract_text] Error extracting PDF with PyMuPDF: {file_path}\n{e}")
+            traceback.print_exc()
+        # Fallback to pdfplumber
         try:
             import pdfplumber
             text = ''
@@ -20,7 +36,9 @@ def extract_text(file_path):
                     if page_text:
                         text += page_text + '\n'
             return text
-        except Exception:
+        except Exception as e:
+            print(f"[extract_text] Error extracting PDF with pdfplumber: {file_path}\n{e}")
+            traceback.print_exc()
             return ''
     return ''
 
