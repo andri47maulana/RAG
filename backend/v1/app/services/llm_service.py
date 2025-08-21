@@ -76,18 +76,20 @@ def ask_llm_with_faiss(question, category, user_id="default", thread_id="default
         memory.append(mem_entry)
 
     # --- FAISS SEARCH ---
+    import sys
     try:
         results = faiss_service.search(vector, top_k, category=category)
         error = ""
     except Exception as e:
+        print(f"[LLM_SERVICE][FAISS_SEARCH_ERROR] {e}", file=sys.stderr)
         results = []
         error = str(e)
 
     # --- CONTEXT DARI FAISS ---
-    if results and isinstance(results[0], dict) and 'text' in results[0]:
+    if results and isinstance(results, list) and len(results) > 0 and isinstance(results[0], dict) and 'text' in results[0]:
         context = '\n\n---\n\n'.join([r['text'] for r in results if 'text' in r])
     else:
-        context = '\n\n---\n\n'.join([str(r) for r in results])
+        context = ''
 
     # --- LLM NARASI ---
     llm_answer = None
@@ -107,9 +109,10 @@ def ask_llm_with_faiss(question, category, user_id="default", thread_id="default
             llm_answer = resp.json()['choices'][0]['message']['content'].strip()
         else:
             llm_answer = f"[OpenAI API error: {resp.text}]"
-    # Simpan jawaban LLM ke memory
-    memory[-1]['a'] = llm_answer
-    faiss_service.save_thread(user_id, thread_id, memory)
+    # Simpan jawaban LLM ke memory jika ada entry
+    if memory:
+        memory[-1]['a'] = llm_answer
+        faiss_service.save_thread(user_id, thread_id, memory)
 
     return {
         'llm_answer': llm_answer,

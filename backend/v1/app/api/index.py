@@ -160,6 +160,8 @@ def answer():
     if not question or not kategori:
         return jsonify({'ok': False, 'error': 'Pertanyaan dan kategori wajib diisi'}), 400
     result = ask_llm_with_faiss(question, kategori, user_id=user_id, thread_id=thread_id, top_k=top_k, security_api_key=security_api_key)
+    if not result:
+        return jsonify({'ok': False, 'error': 'Internal error: no result from LLM'}), 500
     if result.get('error'):
         return jsonify({'ok': False, 'error': result.get('error')}), 200
     return jsonify({
