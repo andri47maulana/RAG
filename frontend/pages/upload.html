@@ -53,6 +53,7 @@
   <script>
   // Ambil PYTHON_URL dan SECURITY_KEY dari .env yang di-inject ke window.env (harus di-inject server-side atau build tool)
   const PYTHON_URL = (window.env && window.env.PYTHON_URL);
+  console.log('PYTHON_URL:', PYTHON_URL);
   const SECURITY_KEY = (window.env && window.env.SECURITY_KEY) || '';
     let evtSourceGlobal = null; // Tambahkan di luar event listener
   // Simpan total embedding terakhir agar bisa fallback saat "done"

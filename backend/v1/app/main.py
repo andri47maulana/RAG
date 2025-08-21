@@ -7,6 +7,7 @@ def create_app():
     CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True, allow_headers=["Content-Type", "Authorization"])  # Aktifkan CORS global
     app.register_blueprint(index.bp)
     return app
+app = create_app()
 
 if __name__ == "__main__":
     app = create_app()
