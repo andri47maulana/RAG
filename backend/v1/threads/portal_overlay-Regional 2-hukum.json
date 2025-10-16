@@ -15,5 +15,23 @@
     "q": "Rapat dibuka oleh",
     "rephrased": "Follow-up. Pertanyaan yang lebih spesifik: Siapa nama Kepala Sub Divisi Hubungan Kelembagaan yang membuka rapat tersebut?",
     "a": "Nama Kepala Sub Divisi Hubungan Kelembagaan yang membuka rapat tersebut adalah Alberi Juanda."
+  },
+  {
+    "q": "siapa kasub",
+    "rephrased": "Follow-up. Pertanyaan yang lebih spesifik: Siapa yang menjadi Kasub Divisi Hubungan Kelembagaan selain Alberi Juanda?",
+    "a": "Maaf, tidak ditemukan jawaban yang relevan."
+  },
+  {
+    "q": "siapa kasub",
+    "a": "G. Priambada adalah Kepala Sub Divisi Tata Kelola dan Pengembangan TI."
+  },
+  {
+    "q": "Rapat dibuka oleh",
+    "a": "Rapat dibuka oleh Kepala Sub Divisi Hubungan Kelembagaan."
+  },
+  {
+    "q": "siapa dia",
+    "rephrased": "Follow-up: Siapa nama lengkap Kepala Sub Divisi Hubungan Kelembagaan yang membuka rapat tersebut?",
+    "a": "Nama lengkap Kepala Sub Divisi Hubungan Kelembagaan yang membuka rapat tersebut adalah Alberi Juanda."
   }
 ]
