@@ -1,0 +1,8 @@
+Flask>=3.0.0
+flask-cors>=4.0.0
+python-dotenv>=1.0.1
+requests>=2.31.0
+numpy>=1.26.0
+gunicorn>=21.2.0
+# Optional: install FAISS CPU build if available for your platform
+# faiss-cpu>=1.7.4
